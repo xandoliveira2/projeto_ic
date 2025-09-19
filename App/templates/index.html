@@ -1,0 +1,781 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <style>
+        /* Estilo da sidebar */
+
+        .sidebar {
+            overflow-y: scroll;
+            overflow-x: visible;
+            position: fixed;
+            top: 0;
+            z-index: 2;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #343a40;
+            color: white;
+            transition: left 0.3s ease;
+            padding: 20px;
+        }
+
+        /* Área sensível ao hover */
+        .hover-area {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 100%;
+            z-index: 999;
+            cursor: pointer;
+        }
+
+        /* Quando a sidebar estiver visível */
+        .sidebar.show {
+            left: 0;
+        }
+
+        /* Links da sidebar */
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+    document.addEventListener("DOMContentLoaded", async function() {
+        await gerarDadosNacionalidade();
+        await gerarDadosCurso();
+        await gerarDadosCor();
+        await gerarDadosCidadeMoradia();
+        await gerarDadosCidadeNascimento();
+        await gerarDadosIngresso();
+        await gerarDadosSexo();
+        await gerarDadosPeriodo();
+        let urlParams = new URLSearchParams(window.location.search);
+        let var_interesse = urlParams.get('campo');
+        let filtros = urlParams.get('filtros');
+        // if(var_interesse)
+        // {
+        //     document.getElementById(var_interesse).style.backgroundColor = "gray";
+        // }
+        // if(filtros)
+        // {
+        //     filtros.split("MMM");
+        //     filtros.forEach(filtro => {
+        //         if(filtro != "")
+        //         {
+        //             let arrayChaveValor = filtro.split(":")
+        //             document.getElementById(filtro[0]).value = filtro[1]
+        //         }
+        //     });
+        // }
+
+
+    });
+</script>
+    <div style="display: flex;flex-direction: column; width: 300px; margin-left: 40%;">
+        <!--
+        
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+
+-->
+        <label for="nacionalidade">Nacionalidade</label>
+        <select class="form-select" name="nacionalidade" id="nacionalidade" onchange="exibirDadosConformeSelecionadoNacionalidade()">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosNacionalidade() {
+                fetch('/gerar-grafico/exibirNacionalidade').then(response => response.json()).then(data => {
+                    campoSelectNacionalidade = document.getElementById('nacionalidade')
+                    data.colunas.forEach(nacionalidade => {
+                        let valor = document.createElement('option');
+                        valor.value = "Nacionalidade:" + nacionalidade;
+                        valor.textContent = nacionalidade;
+                        campoSelectNacionalidade.appendChild(valor);
+                    })
+                }
+                )
+            }
+            async function limparDadosAntesDeAdicionar() {
+                document.getElementById("curso").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cor").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("periodo").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("ingresso").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("sexo").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cidade_nascimento").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cidade_moradia").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+            }
+
+            async function exibirDadosConformeSelecionadoNacionalidade()
+            {
+                let campoSelecionadoNacionalidade = document.getElementById("nacionalidade").value;
+                if(campoSelecionadoNacionalidade == "portugal")
+                {
+
+                    document.getElementById("curso").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cor").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cor").disabled = true;
+                    document.getElementById("periodo").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("ingresso").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("sexo").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cidade_nascimento").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                    document.getElementById("cidade_moradia").innerHTML = "<option value=\"\">Selecione uma opção</option>";
+                }
+                else
+                {
+                    await limparDadosAntesDeAdicionar();
+                    await gerarDadosCidadeMoradia();
+                    await gerarDadosCidadeNascimento();
+                    await gerarDadosCor();
+                    await gerarDadosCurso();
+                    await gerarDadosIngresso();
+                    await gerarDadosPeriodo();
+                    await gerarDadosSexo();
+
+                }
+            }
+
+        </script>
+
+
+
+        <label for="curso">Curso</label>
+        <select class="form-select" name="curso" id="curso">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosCurso() {
+                fetch('/gerar-grafico/exibirCurso').then(response => response.json()).then(data => {
+
+                    campoSelectCurso = document.getElementById('curso');
+
+                    data.colunas.forEach(curso => {
+                        let valor = document.createElement('option');
+                        valor.value = "Curso:" + curso;
+                        valor.textContent = curso;
+                        campoSelectCurso.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+
+        <label for="periodo">Periodo</label>
+        <select class="form-select" name="periodo" id="periodo">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosPeriodo() {
+                fetch('/gerar-grafico/exibirPeriodo').then(response => response.json()).then(data => {
+                    campoSelectPeriodo = document.getElementById('periodo')
+                    data.colunas.forEach(periodo => {
+                        let valor = document.createElement('option');
+                        valor.value = "Período de estudo:" + periodo;
+                        valor.textContent = periodo;
+                        campoSelectPeriodo.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+
+        <label for="ingresso">Ano de ingresso</label>
+        <select class="form-select" name="ingresso" id="ingresso">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosIngresso() {
+                fetch('/gerar-grafico/exibirIngresso').then(response => response.json()).then(data => {
+                    campoSelectIngresso = document.getElementById('ingresso')
+                    data.colunas.forEach(data_ingresso => {
+                        let valor = document.createElement('option');
+                        valor.value = "Ano de ingresso na universidade:" + data_ingresso;
+                        valor.textContent = data_ingresso;
+                        campoSelectIngresso.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+
+        <label for="sexo">Sexo</label>
+        <select class="form-select" name="sexo" id="sexo">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosSexo() {
+                fetch('/gerar-grafico/exibirSexo').then(response => response.json()).then(data => {
+                    campoSelectSexo = document.getElementById('sexo')
+                    data.colunas.forEach(sexo => {
+                        let valor = document.createElement('option');
+                        valor.value = "Sexo:" + sexo;
+                        valor.textContent = sexo;
+                        campoSelectSexo.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+
+        <script>
+            function exibirMensagemCorNaoContaDadosDePortugal(){
+                let dadoFormsCor = document.getElementById("cor");
+                let labelDadoFormsCor = document.getElementById("labelCor");
+                if(dadoFormsCor.value != "")
+                {
+                    alert(`Nos dados de Portugal não tem campos distinguidos por cor/raça, dados exibidos com filtro de cor e raça não inclui dados de portugal.`);
+                    dadoFormsCor.style.borderColor = "red";
+                    dadoFormsCor.style.borderWidth = "4px";
+                    dadoFormsCor.title = "DADOS DE PORTUGAL NÃO SERÃO CONSIDERADOS PARA GERAÇÃO DE DADOS!";
+                    labelDadoFormsCor.textContent = "Cor ⚠️";
+                    labelDadoFormsCor.title = "DADOS DE PORTUGAL NÃO SERÃO CONSIDERADOS PARA GERAÇÃO DE DADOS!";
+                }
+                else
+                {
+                    dadoFormsCor.style.borderColor = "lightgray"
+                    dadoFormsCor.style.borderWidth = "1px"
+                    dadoFormsCor.title = ""
+                    labelDadoFormsCor.textContent = "Cor";
+                    labelDadoFormsCor.title = "";
+                }
+            }
+        </script>
+        <label for="cor" id="labelCor">Cor</label>
+        <select class="form-select" name="cor" id="cor" onchange="exibirMensagemCorNaoContaDadosDePortugal()">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosCor() {
+                fetch('/gerar-grafico/exibirCor').then(response => response.json()).then(data => {
+                    campoSelectCor = document.getElementById('cor')
+                    data.colunas.forEach(cor => {
+                        let valor = document.createElement('option');
+                        valor.value = "Cor ou raça:" + cor;
+                        valor.textContent = cor;
+                        campoSelectCor.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+
+
+        <label for="cidade_nascimento">Cidade de nascimento</label>
+        <select class="form-select" name="cidade_nascimento" id="cidade_nascimento">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosCidadeNascimento() {
+                fetch('/gerar-grafico/exibirNascimento').then(response => response.json()).then(data => {
+                    campoSelectNascimento = document.getElementById('cidade_nascimento')
+                    data.colunas.forEach(curso => {
+                        let valor = document.createElement('option');
+                        valor.value = "Cidade e estado/província de nascimento:" + curso;
+                        valor.textContent = curso;
+                        campoSelectNascimento.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+
+        <label for="cidade_moradia">Cidade em que mora</label>
+        <select class="form-select" name="cidade_moradia" id="cidade_moradia">
+            <option value="" selected>Selecione uma opção</option>
+        </select>
+        <script>
+            async function gerarDadosCidadeMoradia() {
+                fetch('/gerar-grafico/exibirMoradia').then(response => response.json()).then(data => {
+                    campoSelectMoradia = document.getElementById('cidade_moradia')
+                    data.colunas.forEach(curso => {
+                        let valor = document.createElement('option');
+                        valor.value = "Cidade e estado/província onde mora:" + curso;
+                        valor.textContent = curso;
+                        campoSelectMoradia.appendChild(valor);
+                    })
+                }
+                )
+            }
+        </script>
+        <!--
+        
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+TODO : REGIÃO DOS FILTROS
+
+-->
+
+        <!-- (extensão Better Comments)
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+ TODO: REGIÃO BOTÕES
+   -->
+
+
+        <!-- ! Isso é um alerta ou algo crítico -->
+        <!-- * Isso é um comentário informativo -->
+        <!-- ? Isso é uma dúvida ou questão -->
+        <!-- // Isso é um comentário normal -->
+        <!-- TODO: Isso é algo a ser feito -->
+
+
+        <div class="alinharBotoes" style="display: flex; justify-content: space-around;margin-top: 20px;">
+            <button class="btn btn-primary" onclick="HandlerCruzarDados()">Gerar gráfico</button>
+            <button class="btn btn-warning" onclick="LimparDados()">Limpar Dados</button>
+        </div>
+        <!-- <button onclick="cruzarDados()">Puxar Dados</button> -->
+        <script>
+
+            async function HandlerCruzarDados() {
+                await cruzarDados();
+                await limparChart();
+                await exibirGrafico();
+                await exibirMensagem();
+            }
+
+            async function cruzarDados() {
+
+                let curso = document.getElementById('curso').value;
+                let cidadeMoradia = document.getElementById('cidade_moradia').value;
+                let cidadeNascimento = document.getElementById('cidade_nascimento').value;
+                let nacionalidade = document.getElementById('nacionalidade').value;
+                let cor = document.getElementById('cor').value;
+                let sexo = document.getElementById('sexo').value;
+                let ingresso = document.getElementById('ingresso').value;
+                let periodo = document.getElementById('periodo').value;
+                //  ##ordem## > curso > periodo > ingresso >  sexo > cor > nacionalidade > cidade nascimento > cidade moradia
+                const params = new URLSearchParams(window.location.search);
+                if (params.has('campo')) {
+
+
+                    requestUrl = "/gerar-grafico/?filtros=" + `${curso}MMM${periodo}MMM${ingresso}MMM${sexo}MMM${cor}MMM${nacionalidade}MMM${cidadeNascimento}MMM${cidadeMoradia}&campo=` + params.get('campo')
+                    // window.location.href = requestUrl
+                    history.pushState(null, "", requestUrl);
+                    return 1
+                }
+                else {
+
+                    let requestUrl = "/gerar-grafico/?filtros=" + `${curso}MMM${periodo}MMM${ingresso}MMM${sexo}MMM${cor}MMM${nacionalidade}MMM${cidadeNascimento}MMM${cidadeMoradia}`
+                    // window.location.href = requestUrl
+                    history.pushState(null, "", requestUrl);
+                    return 1
+
+                }
+            }
+        </script>
+
+
+        <script>
+            function LimparDados() {
+                let atualURL = window.location.href;
+                let curso = document.getElementById('curso').value = '';
+                let cidadeMoradia = document.getElementById('cidade_moradia').value = '';
+                let cidadeNascimento = document.getElementById('cidade_nascimento').value = '';
+                let nacionalidade = document.getElementById('nacionalidade').value = '';
+                let cor = document.getElementById('cor').value = '';
+                let sexo = document.getElementById('sexo').value = '';
+                let ingresso = document.getElementById('ingresso').value = '';
+                let periodo = document.getElementById('periodo').value = '';
+                let parametros = new URLSearchParams(window.location.search)
+                //  ##ordem## > curso > periodo > ingresso >  sexo > cor > nacionalidade > cidade nascimento > cidade moradia
+                let requestUrl
+                if (parametros.has('curso')) {
+                    requestUrl = "/gerar-grafico/" + '?filtros=' + `MMMMMMMMMMMMMMMMMMMMMcampo=` + parametros.get('campo')
+                }
+                else {
+                    requestUrl = "/gerar-grafico/" + '?filtros=' + `MMMMMMMMMMMMMMMMMMMMM`
+                }
+                window.location.href = requestUrl
+            }
+        </script>
+
+
+        <!-- (extensão Better Comments)
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+ TODO: FINAL DE REGIÃO BOTÕES
+   -->
+    </div>
+    <div id="label" style="margin-top: 30px;display: flex;justify-content: center;"></div>
+    <script>
+        async function getTextoDaURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const texto = urlParams.get('campo');
+
+            if (texto) {
+                const elemento = texto.length > 20 ? document.createElement('h2') : document.createElement('h1');
+                elemento.textContent = texto;
+                const div = document.getElementById('label')
+                div.appendChild(elemento);
+            }
+        }
+
+        // Chamar a função ao carregar a página
+        window.onload = async () => await getTextoDaURL();
+    </script>
+
+    <!-- Área sensível ao hover -->
+    <div class="hover-area"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h4>Variaveis de Interesse</h4>
+        <!-- <a href="#">Home</a> -->
+
+    </div>
+    <!-- {% block grafico %} {% endblock %} -->
+    <ul id="naoprocessados"></ul>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // JavaScript para mostrar/ocultar a sidebar ao passar o mouse
+        const sidebar = document.querySelector('.sidebar');
+        const hoverArea = document.querySelector('.hover-area');
+
+        // Mostrar a sidebar ao passar o mouse
+        hoverArea.addEventListener('mouseenter', () => {
+            sidebar.classList.add('show');
+        });
+
+        // Ocultar a sidebar ao sair da área
+        sidebar.addEventListener('mouseleave', () => {
+            sidebar.classList.remove('show');
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/exibir/')
+                .then(response => response.json())
+                .then(data => {
+                    data.colunas.forEach(element => {
+                        let sidebarElement = document.getElementById('sidebar');
+                        let child = document.createElement('a');
+                        const params = new URLSearchParams(window.location.search);
+                        if (params.has('filtros')) {
+                            if (params.has('campo')) {
+
+                                child.href = "/gerar-grafico/?" + 'filtros=' + params.get('filtros') + '&campo=' + element;
+                                console.log(child.href)
+                            }
+                            else {
+
+                                child.href = "/gerar-grafico/?" + 'filtros=' + params.get('filtros') + `&campo=${element}`;
+                                console.log(child.href)
+                            }
+                        }
+                        else {
+                            if (!params.has('campo')) {
+                                child.href = `/gerar-grafico/?campo=${element}`;
+                               
+                            }
+                        }
+                        child.textContent = element;
+                        sidebarElement.appendChild(child);
+                    });
+                })
+                .catch(error => console.error('Erro ao buscar dados:', error));
+            // fetch('/exibirnaocolunas/')
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         data.colunas.forEach(element => {
+            //             let divElement = document.getElementById('naoprocessados');
+            //             let child = document.createElement('li');
+            //             child.textContent = element;
+            //             divElement.appendChild(child);
+            //         })
+            //     })
+
+
+
+
+        });
+    </script>
+
+    <div id="chart"></div>
+
+    <script>
+
+        let graf = null;
+        async function limparChart() {
+            if(graf)
+            {
+                graf.destroy();
+                graf = null;
+            }
+        }
+        async function exibirGrafico() {
+            await limparChart();
+            var options = {
+    series: [{
+        name: 'Quantidade',
+        data: []
+    }],
+    chart: {
+        height: 350,
+        type: 'bar',
+    },
+    plotOptions: {
+        bar: {
+            borderRadius: 10,
+            dataLabels: {
+                position: 'top',
+            },
+        }
+    },
+    dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+            return val + "";
+        },
+        offsetY: -20,
+        style: {
+            fontSize: '12px',
+            colors: ["#304758"]
+        }
+    },
+    xaxis: {
+        categories: [],
+        position: 'top',
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false
+        },
+        crosshairs: {
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    colorFrom: '#D8E3F0',
+                    colorTo: '#BED1E6',
+                    stops: [0, 100],
+                    opacityFrom: 0.4,
+                    opacityTo: 0.5,
+                }
+            }
+        },
+        tooltip: {
+            enabled: true,
+        }
+    },
+    yaxis: {
+        axisBorder: {
+            show: false
+        },
+        axisTicks: {
+            show: false,
+        },
+        labels: {
+            show: false,
+            formatter: function (val) {
+                return val + "";
+            }
+        }
+    },
+    tooltip: {
+        y: {
+            formatter: function (val, { series, seriesIndex, dataPointIndex, w }) {
+                // Pegamos todos os valores da série atual
+                let allValues = w.config.series[seriesIndex].data;
+                let total = allValues.reduce((acc, v) => acc + v, 0);
+
+                // Evita divisão por zero
+                if (total === 0) return `${val} (0%)`;
+
+                let percentage = ((val / total) * 100).toFixed(2);
+                return `${val} (${percentage}%)`;
+            }
+        }
+    },
+    title: {
+        text: 'Gráfico filtrado',
+        floating: true,
+        offsetY: 330,
+        align: 'center',
+        style: {
+            color: '#444'
+        }
+    }
+};
+
+let search = window.location.search;
+
+await fetch(`/t/${search}`)
+    .then(response => response.json())
+    .then(dados => {
+        options.series[0].data = dados.y;
+        options.xaxis.categories = dados.x;
+
+        let graf = new ApexCharts(document.querySelector("#chart"), options);
+        graf.render();
+    });
+        }
+    </script>
+
+    <div id="mensagens" style="display: flex;justify-content: center;align-items: center;flex-direction: column;"></div>
+
+
+    <script>
+        async function salvarMensagem() {
+            let params = new URLSearchParams(window.location.search);
+            let mensagemFiltros = ""
+            let filtros = params.get("filtros")
+            let arrayFiltros = filtros.split("MMM")
+            arrayFiltros.forEach(
+                (dado, index) => {
+                    if (dado != '') {
+                        let atualdado = dado.split(':')
+                        if (index === arrayFiltros.length - 1) {
+                            mensagemFiltros += " " + atualdado[0] + " = " + atualdado[1];
+                        }
+                        else {
+                            mensagemFiltros += " " + atualdado[0] + " = " + atualdado[1] + ',';
+                        }
+                    }
+                }
+            )
+
+            let variavelInteresse = params.get("campo")
+            let salvar = confirm(`Deseja realmente salvar essa nova mensagem para os filtros de :${mensagemFiltros}.\nVariavel de interesse: ${variavelInteresse}`)
+            if (salvar) {
+                let mensagem = document.getElementById("input_save_message").value;
+                await fetch(`/sm/?filtros=${filtros}&campo=${variavelInteresse}&mensagem=${mensagem}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.mensagem)
+                    })
+            }
+            else {
+                alert("operação cancelada")
+            }
+
+        }
+
+        async function exibirMensagem() {
+            let parametros = new URLSearchParams(window.location.search);
+            let textBoxMensagens = document.getElementById("mensagens")
+            textBoxMensagens.innerHTML = ''
+            if (parametros.has('campo') && parametros.get('filtros') != "MMMMMMMMMMMMMMMMMMMMM") {
+
+                fetch("/m/?" + parametros.toString()).then(response => response.json()).then
+                    (dados => {
+                        if (dados.mensagem && dados.mensagem.length > 0) {
+                            console.log("ENCAIXOU NO IF")
+                            dados.mensagem.forEach(arraysMensagem => {
+                                arraysMensagem.forEach(mensagens => {
+                                    let mensagem = document.createElement('input');
+                                    mensagem.id = "input_save_message";
+                                    mensagem.type = "text";
+                                    mensagem.value = mensagens;
+                                    mensagem.style.width = "calc(100% - 30px)";
+                                    mensagem.style.margin = "15px";
+                                    mensagem.classList.add("form-control");
+                                    textBoxMensagens.appendChild(mensagem);
+
+                                    let button = document.createElement("button");
+                                    button.classList.add("btn", "btn-success");
+                                    button.textContent = "Salvar";
+                                    button.addEventListener("click", salvarMensagem);
+                                    textBoxMensagens.appendChild(button);
+                                });
+                            });
+                        } else {
+                            console.log("ENCAIXOU NO ELSE")
+
+                            let mensagem = document.createElement('input');
+                            mensagem.id = "input_save_message";
+                            mensagem.type = "text";
+                            mensagem.value = "";
+                            mensagem.placeholder = " -- DIGITE SEU TEXTO AQUI --"
+                            mensagem.style.width = "calc(100% - 30px)";
+                            mensagem.style.margin = "15px";
+                            mensagem.classList.add("form-control");
+                            textBoxMensagens.appendChild(mensagem);
+
+                            let button = document.createElement("button");
+                            button.classList.add("btn", "btn-success");
+                            button.textContent = "Salvar";
+                            button.addEventListener("click", salvarMensagem);
+                            textBoxMensagens.appendChild(button);
+                        }
+                        // dados.mensagem.forEach(arraysMensagem => {
+                        //     arraysMensagem.forEach(mensagens => 
+                        //     {
+                        //         let mensagem = document.createElement('input')
+                        //         mensagem.id = "input_save_message"
+                        //         mensagem.type = "text" 
+                        //         mensagem.value = mensagens
+                        //         mensagem.style.width = "calc(100% - 30px)"
+                        //         mensagem.style.margin = "15px"
+                        //         mensagem.classList.add("form-control")
+                        //         textBoxMensagens.appendChild(mensagem)
+                        //         let button = document.createElement("button")
+                        //         button.classList.add("btn","btn-success")
+                        //         button.textContent = "Salvar"
+                        //         button.addEventListener("click", salvarMensagem) // mais recomendado que usar o onclick pois permite ter varios eventos, usando o onclick diretamente (button.onclick = salvarMensagem) substitui o atual pelo mais recente em caso de multiplas funcoes no botão
+                        //         textBoxMensagens.appendChild(button)
+
+                        //     }
+                        //                             )
+
+                        //                                         }
+                        //                         );
+                    }
+                    )
+            }
+
+        }
+    </script>
+
+</body>
+
+</html>
