@@ -4,7 +4,11 @@ Este documento orienta o processo de instalação, configuração e utilização
 
 ---
 
-## ⚙️ Passo 0 — Configuração do Banco de Dados
+## 🛠️ Parte 1 – Instalação e Configuração (Passos 0 a 5)
+
+---
+
+### ⚙️ Passo 0 — Configuração do Banco de Dados
 
 Antes de iniciar o sistema, é necessário que um responsável técnico configure o banco de dados PostgreSQL.
 
@@ -15,7 +19,7 @@ Antes de iniciar o sistema, é necessário que um responsável técnico configur
 
 ---
 
-## 📥 Passo 1 — Instalar o Python
+### 📥 Passo 1 — Instalar o Python
 
 - Instale o Python na sua máquina, **preferencialmente na versão 3.12 ou superior**.
 - Durante a instalação, marque a opção **"Add Python to PATH"**.
@@ -23,7 +27,7 @@ Antes de iniciar o sistema, é necessário que um responsável técnico configur
 
 ---
 
-## 📁 Passo 2 — Obter o Projeto
+### 📁 Passo 2 — Obter o Projeto
 
 - Baixe e **descompacte os arquivos** deste projeto, ou
 - Faça o clone do repositório usando o Git:
@@ -36,7 +40,7 @@ Antes de iniciar o sistema, é necessário que um responsável técnico configur
 
 ---
 
-## 📦 Passo 3 — Instalar Dependências
+### 📦 Passo 3 — Instalar Dependências
 
 1. Abra o terminal (CMD, PowerShell, ou terminal do VS Code).
 2. Navegue até a **pasta raiz do projeto**, onde está o arquivo `requirements.txt`.
@@ -50,7 +54,7 @@ Antes de iniciar o sistema, é necessário que um responsável técnico configur
 
 ---
 
-## 🚀 Passo 4 — Iniciar o Servidor
+### 🚀 Passo 4 — Iniciar o Servidor
 
 1. Navegue até a pasta `App`, onde está localizado o arquivo `manage.py`.
 2. Execute o comando:
@@ -68,7 +72,7 @@ python manage.py runserver 4560
 
 ---
 
-## 🌐 Passo 5 — Acessar o Sistema
+### 🌐 Passo 5 — Acessar o Sistema
 
 Abra seu navegador e acesse:
 
@@ -80,14 +84,18 @@ http://127.0.0.1:8000
 
 ---
 
-## 📈 Passo 6 — Selecionar Variáveis
+## 👤 Parte 2 – Guia de Uso do Sistema (Passos 6 a 9)
+
+---
+
+### 📈 Passo 6 — Selecionar Variáveis
 
 - Passe o mouse no **lado esquerdo da tela**.
 - Isso abrirá um menu com as **variáveis de interesse** disponíveis para geração de gráficos.
 
 ---
 
-## 🎯 Passo 7 — (Opcional) Aplicar Filtros Demográficos
+### 🎯 Passo 7 — (Opcional) Aplicar Filtros Demográficos
 
 - No centro da tela, selecione os filtros desejados, como:
   - Curso
@@ -96,13 +104,13 @@ http://127.0.0.1:8000
 
 ---
 
-## 📊 Passo 8 — Gerar o Gráfico
+### 📊 Passo 8 — Gerar o Gráfico
 
 - Após definir as variáveis e filtros, clique no botão **"Gerar Gráfico"**.
 
 ---
 
-## 📝 Passo 9 — (Opcional) Adicionar Texto ao Gráfico
+### 📝 Passo 9 — (Opcional) Adicionar Texto ao Gráfico
 
 - Caso o banco de dados tenha sido configurado corretamente (Passo 0),
 - Você poderá **anexar um texto descritivo** ao gráfico gerado com os filtros selecionados.
